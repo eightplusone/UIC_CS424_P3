@@ -2,89 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Project 3</title>
+    <title>Project-3</title>
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="http://d3js.org/topojson.v0.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="script/script.js"></script>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="script/textviz.js"></script>
+    <script src="script/stairviz.js"></script>
     <link rel="stylesheet" type="text/css" href="css/style.css">
+
 </head>
 <body>
-<div style="height: 768px;width: 1024px" >
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" id = "leftMenu" style="background-color: #333333">
-                <ul class="nav nav-pills nav-stacked">
-                    <li class="active"><a href="#"><img class="menuIcon" src="icons/Home.png"></a></li>
-                    <li><a href="#"><img class="menuIcon" src="icons/About.png"></a></li>
-                    <li><a href="#"><img class="menuIcon" src="icons/Code.png"></a></li>
-                </ul>
-            </div>
-            <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11" style="background-color: white">
-                <div class="row topHead" style="background-color: white">
-                    <form class="form-inline">
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 form-group">
-                            <label for="file">Current File:</label>
-                            <input type="file" class="form-control input-sm" id="file">
+<div>
+    <div  style="width: 10%;float: left;background-color: gray;height: 768px;">
+        <div class="leftMenu">
+        <ul class="nav nav-pills nav-stacked">
+            <li class="active"><a href="#"><img class="menuIcon" src="icons/Home.png"></a></li>
+            <li><a href="#"><img class="menuIcon" src="icons/About.png"></a></li>
+            <li><a href="#"><img class="menuIcon" src="icons/Code.png"></a></li>
+        </ul>
+        </div>
+    </div>
+    <div style="width: 90%;float: right;height: 768px;">
+        <div style="height: 15%;">
+            <div style="height: 50%; margin-top: 2%;margin-left: 2%">
+                <div style="clear: both">
+                    <div style="float: left;width: 40%">
+                        <input type="file" id="file">
+                    </div>
+                    <div style="float: left;width: 50%">
+                        <div class="dropdown">
+                            <label for="choose">Annotation Categories:</label>
+                            <button id="choose" class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Choose..
+                                <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" class="small" data-value="option1" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 1</a></li>
+                                <li><a href="#" class="small" data-value="option2" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 2</a></li>
+                                <li><a href="#" class="small" data-value="option3" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 3</a></li>
+                                <li><a href="#" class="small" data-value="option4" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 4</a></li>
+                                <li><a href="#" class="small" data-value="option5" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 5</a></li>
+                                <li><a href="#" class="small" data-value="option6" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 6</a></li>
+                            </ul>
                         </div>
-                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 form-group">
-                            <div class="dropdown">
-                                <label for="choose">Annotation Categories:</label>
-                                <button id="choose" class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Choose..
-                                    <span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#" class="small" data-value="option1" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 1</a></li>
-                                    <li><a href="#" class="small" data-value="option2" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 2</a></li>
-                                    <li><a href="#" class="small" data-value="option3" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 3</a></li>
-                                    <li><a href="#" class="small" data-value="option4" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 4</a></li>
-                                    <li><a href="#" class="small" data-value="option5" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 5</a></li>
-                                    <li><a href="#" class="small" data-value="option6" tabIndex="-1"><input type="checkbox"/>&nbsp;Option 6</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                        <button type="submit" class="btn btn-default btn-sm">Update</button>
-                        </div>
-                    </form>
+                    </div>
+                    <div style="float: left;width: 10%">
+                        <button type="submit" >Update</button>
+                    </div>
                 </div>
-                <div class="row topHead">
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-4"><hr class="blue"></div>
-                            <div class="col-lg-8 col-md-8"><p> node-to-node</p></div>
-                        </div>
 
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-4"><hr class="green"></div>
-                            <div class="col-lg-8 col-md-8"><p> node-to-edge</p></div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-4"><hr class="red"></div>
-                            <div class="col-lg-8 col-md-8"><p> edge-to-node</p></div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-4"><hr class="purple"></div>
-                            <div class="col-lg-8 col-md-8"><p> edge-to-edge</p></div>
-                        </div>
-                    </div>
+            </div>
+            <div style="height: 50%;width:100%;clear:both;margin-left: 10%;margin-top: -2%">
+                <div style="float:left;width: 25%">
+                    <hr class="blue" align="center">
+                    <p> node-to-node</p>
                 </div>
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6 textViz">
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6 stairViz">
-                    </div>
+                <div style="float:left;width: 25%;">
+                    <hr class="green" align="center">
+                    <p>node-to-edge</p>
+                </div>
+                <div style="float:left;width: 25%;">
+                    <hr class="red" align="center">
+                    <p>edge-to-node</p>
+                </div>
+                <div style="float:left;width: 25%;">
+                    <hr class="purple" align="center">
+                    <p>edge-to-edge</p>
                 </div>
             </div>
         </div>
+        <div style="height: 85%;margin-top: -2%">
+            <div class="textViz" style="width: 45%;float: left;height: 95%;"></div>
+            <div class="stairViz" style="width: 45%;float: right;height: 95%;"></div>
+                <div style="clear: both"></div>
+        </div>
     </div>
+    <div style="clear: both"></div>
 </div>
 </body>
 </html>
