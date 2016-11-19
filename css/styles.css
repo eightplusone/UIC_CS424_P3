@@ -1,31 +1,49 @@
-body{
-    font-family: "Georgia", "Times New Roman";
-}
-#leftMenu{
-
-    padding: 10px;
+html {
+    position: relative;
+    width: 1024px;
     height: 768px;
+
 }
+.textViz, .stairViz{
+    margin: 2%;
+    border: solid black 2px;
 
+}
 .menuIcon {
-
     width: 48px;
     height: 48px;
+    padding: 0px;
+    margin: -10px;
 }
 
-.textViz, .stairViz {
-    border: solid 1px black;
-    margin: 2%;
-    height: 652px;
-    width: 410px;
+.leftMenu {
+
+    padding: 20px;
+
+}
+.leftMenuLi {
+    margin-top :25px;
+
 }
 
-.topHead {
-    height: 85px;
-    width: 891px;
-    padding: 10px;
-    margin-bottom: -40px;
-}
-.dropdown-menu{
+hr.red {
+    width:35%;
 
+    border-top: 5px solid #ff7376;
+    margin: 9px 0;
+}
+hr.blue {
+    width:35%;
+    border-top: 5px solid #0098ce;
+    margin: 9px 0;
+}
+hr.green {
+    width:35%;
+    border-top: 5px solid #3ad531;
+    margin: 9px 0;
+}
+hr.purple {
+    width:35%;
+    border-top: 5px solid #8a6ad4;
+    margin: 9px 0;
 }
