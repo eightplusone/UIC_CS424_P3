@@ -5,19 +5,17 @@ html {
 
 }
 .textViz, .stairViz{
-    margin: 2%;
+    margin: 20px;
     border: solid black 2px;
 
 }
 .menuIcon {
     width: 48px;
     height: 48px;
-    padding: 0px;
     margin: -10px;
 }
 
 .leftMenu {
-
     padding: 20px;
 
 }
@@ -28,7 +26,6 @@ html {
 
 hr.red {
     width:35%;
-
     border-top: 5px solid #ff7376;
     margin: 9px 0;
 }
