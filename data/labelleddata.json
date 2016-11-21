@@ -1,8 +1,4 @@
-[{
-		"paragraph": { 
-			"sentences": {
-			"words" : [
-			{
+[[[{
 				"Id": "T0",
 				"wordindex": 0,
 				"word": "Mild"
@@ -195,8 +191,8 @@
 				"Id": "T47",
 				"wordindex": 47,
 				"word": "7.7."
-			} ] },
-		 "words" : [ {
+			} ] , 
+		  [ {
 				"Id": "T48",
 				"wordindex": 48,
 				"word": "This"
@@ -335,8 +331,7 @@
 				"wordindex": 81,
 				"word": "2000)."
 			} ] ,
-		
-		"words" : [ {
+		 [ {
 				"Id": "T82",
 				"wordindex": 82,
 				"word": "All"
@@ -464,8 +459,7 @@
 				"wordindex": 112,
 				"word": "1996)."
 			} ],
-		
-		"words" : [ {
+		[ {
 
 				"Id": "T113",
 				"wordindex": 113,
@@ -648,7 +642,7 @@
 				"wordindex": 157,
 				"word": "system."
 			}],
-		"words" :[  {
+		[  {
 				"Id": "T158",
 				"wordindex": 158,
 				"word": "The"
@@ -694,7 +688,7 @@
 				"word": "5.8"
 			}],
 		
-		  "words" :[ {
+		  [ {
 				"Id": "T169",
 				"wordindex": 169,
 				"word": "could"
@@ -768,7 +762,7 @@
 				"word": "pH."
 			}],
 		
-		"words" :[  {
+		[  {
 				"Id": "T187",
 				"wordindex": 187,
 				"word": "To"
@@ -880,8 +874,8 @@
 				"Id": "T214",
 				"wordindex": 214,
 				"word": "growth."
-			}]},
-		"words" : [{
+			}],
+		 [{
 				"Id": "T215",
 				"wordindex": 215,
 				"word": "We"
@@ -1024,10 +1018,8 @@
 				"wordindex": 249,
 				"word": "2D)."
 			}]
-		},
-		{
-		"sentences": { "words":[{
-
+		],
+		[[{
 				"Id": "T250",
 				"wordindex": 250,
 				"word": "Expression"
@@ -1089,8 +1081,7 @@
 				"word": "(Fig."
 			},
 		
-		{
-		
+			{
 				"Id": "T265",
 				"wordindex": 265,
 				"word": "2D)"
@@ -1199,8 +1190,7 @@
 				"wordindex": 291,
 				"word": "induction."
 			}],
-		
-		"words" : [{
+		   [{
 				"Id": "T292",
 				"wordindex": 292,
 				"word": "We"
@@ -1337,13 +1327,12 @@
 				"wordindex": 325,
 				"word": "(Fig."
 			},
-		{
+			{
 				"Id": "T326",
 				"wordindex": 326,
 				"word": "2A-C)."
 			}],
-	
-		"words" : [{
+			[{
 		
 				"Id": "T327",
 				"wordindex": 327,
@@ -1518,7 +1507,7 @@
 				"word": "5.8,"
 			},
 		
-		{
+			{
 				"Id": "T370",
 				"wordindex": 370,
 				"word": "in"
@@ -1556,7 +1545,7 @@
 				"word": "(A."
 			},
 		
-		{
+			{
 				"Id": "T379",
 				"wordindex": 379,
 				"word": "Kato"
@@ -1569,9 +1558,7 @@
 				"wordindex": 381,
 				"word": "E.A."
 			},
-		
-		
-		{
+			{
 				"Id": "T382",
 				"wordindex": 382,
 				"word": "Groisman,"
@@ -1580,14 +1567,13 @@
 				"wordindex": 383,
 				"word": "unpubl."
 			},
-		
-		{
+			{
 				"Id": "T384",
 				"wordindex": 384,
 				"word": "results)."
 			}],
 		
-		"words" : [{	"Id": "T385",
+		[{	"Id": "T385",
 			"wordindex": 385,
 			"word": "From"
 			}, {
@@ -1683,4 +1669,8 @@
 				"wordindex": 408,
 				"word": "phosphorylation."
 			}]
-		}}]
+		
+		]
+	]
+
+		

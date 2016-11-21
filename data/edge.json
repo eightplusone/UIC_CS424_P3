@@ -1,10 +1,4 @@
-[{  
-    "Id":"E1",
-    "sourceid":"T403",
-    "destid":"T340"
-  },
-   
-  {
+[  {
     "Id":"E1",
     "sourceid":"T44",
     "destinationid":"T9",
