@@ -4,6 +4,10 @@ $(document).ready(function(){
     let svg = d3.select("body").select("div.stairViz").append("svg")
 				.attr("width","100%")
 				.attr("height","100%");
+				
+	var div = d3.select("body").select("div.stairViz").append("div")
+                    .attr("class", "tooltip")
+                    .style("opacity", 0);			
      
      d3.json("./data/labelleddata.json", function(error,datao) {
         if (error) {  //If error is not null, something went wrong.
@@ -52,9 +56,9 @@ $(document).ready(function(){
 			
 			for( var l=0;l < edge.length ;l++)
 				{
-					var sourceid = edge[l].sourceid;
-					var destid = edge[l].destinationid;
-					var tag = edge[l].label;
+					//var sourceid = edge[l].sourceid;
+					//var destid = edge[l].destinationid;
+					//var tag = edge[l].label;
 					var canvas = svg.append("g");
 					canvas.append("canvas:defs").append("canvas:marker")
 							.attr("id", "triangle")
@@ -65,51 +69,75 @@ $(document).ready(function(){
 							.attr("orient", "auto")
 							.append("path")
 							.attr("d", "M 0 0 6 3 0 6 1.5 3")
-							.style("fill", "black");
-							
-					var link = canvas.append("line")
-								.attr("x1",function(){ var dummy =  getsourcex(edge[l]);
-														return dummy.srcx;})
-								.attr("y1",function(){ var dummy = getsourcey(edge[l]);
-														return dummy.srcy; })
-								.attr("x2",function(){ var dummy =  getsourcex(edge[l]);
-														return dummy.srcx+40;})
-								.attr("y2",function(){ var dummy = getsourcey(edge[l]);
-														return dummy.srcy; })	
-								.attr("stroke-width","2")
-								.attr("stroke","black");
-														
-					canvas.append("line")
-								.attr("x1",function(){ var dummy =  getsourcex(edge[l]);
-														return dummy.srcx+40;})
-								.attr("y1",function(){ var dummy = getsourcey(edge[l]);
-														return dummy.srcy; })									
-								.attr("x2",function(){ var dummy = getsourcex(edge[l]);
-														return dummy.srcx+40; })
-								.attr("y2",function(){ var dummy = getdesty(edge[l]);
-														return dummy.desy; })
-								.attr("stroke-width","2")
-								.attr("stroke","black");
-								
-					canvas.append("line")
-								.attr("x1",function(){ var dummy =  getsourcex(edge[l]);
-														return dummy.srcx+40;})
-								.attr("y1",function(){ var dummy = getdesty(edge[l]);
-														return dummy.desy; })									
-								.attr("x2",function(){ var dummy = getdestx(edge[l]);
-														return dummy.desx; })
-								.attr("y2",function(){ var dummy = getdesty(edge[l]);
-														return dummy.desy; })
-								.attr("stroke-width","2")
-								.attr("stroke","black")
-								.attr("marker-end", "url(#triangle)");
-								
-								
-								
-;
-						
+							.style("fill","black");			//change to the color of the line see how
+					
+					var link = canvas.append("path")
+								.attr("label",edge[l].label)
+								.attr("src",edge[l].sourceid)
+								.attr("dest",edge[l].destinationid)
+								.attr("class","link")
+								.attr("d",function(){
+										var sourcex= getsourcex(edge[l]).srcx;
+										var sourcey = getsourcey(edge[l]).srcy;
+										var destx = getdestx(edge[l]).desx;
+										var desty = getdesty(edge[l]).desy;
+										var val = "M "+ sourcex +" "+sourcey+" "+(max_x-20)+" "+sourcey+" "+(max_x-20)+" "+desty+" "+destx+" "+desty;
+										return val;})
+								.attr("marker-end", "url(#triangle)")
+								.attr("stroke",function(){ var col = getedgecolor(edge[l]);
+															return col;})
+								.style("fill","none")							
+								.on("mouseover",funcmouseover)
+								.on("mouseout",funcmouseout);					
 				}
+			
+			function getedgecolor(edg)
+			{	
+				if((edg.sourceid).includes("T")){
+					if((edg.destinationid).includes("T")){
+						return "#0098ce";
+					}
+					else{
+						return "#3ad531"
+					}
+				}
+				else if((edg.sourceid).includes("E")){
+					if((edg.destinationid).includes("T")){
+						return "#ff376";
+					}
+					else{
+						return "#38a6ad4"
+					}
+				}
+			}
+			
+			function funcmouseover()
+            {
+					
+					div.transition()
+						.duration(200)
+						.style("opacity", .9);
+					var label = d3.select(this).attr("label");
+					var src = d3.select(this).attr("src");
+					var dest = d3.select(this).attr("dest");
+					console.log(label);
+					div.html("Label: "+ label +"<br> Relationship: <br> " + src + "->" + dest)
+							.style("left",d3.event.pageX +"px")
+								.style("top", d3.event.pageY - 28 +"px")
+								.style("color", "white");
+			}
+			
+			/*function getword(edg)
+			{
 				
+			}*/
+			function funcmouseout(d)
+            {
+                div.transition()
+                        .duration(2)
+                        .style("opacity", 0);
+            }
+			
 			function getsourcex(edg){
 				if((edg.sourceid).includes("T")){
 					for(var count =0;count < temp_holder.length;count++){
@@ -182,19 +210,7 @@ $(document).ready(function(){
 			
 			}
 			})
-			/*var canvas = svg.append("g");
-			for( var l=0;l < edge.length ;l++)
-				{
-					var sourceid = edge[i].sourceid;
-					var destid = edge[i].destinationid;
-					var tag = edge[i].label;
-					var link = canvas.append("line")
-								.attr("x",retrievex)
-				}
-			function retrievex()	
-			{
-				
-			}*/
+			
 	}
 })	
 

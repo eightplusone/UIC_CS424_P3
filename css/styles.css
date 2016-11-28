@@ -44,3 +44,19 @@ hr.purple {
     border-top: 5px solid #8a6ad4;
     margin: 9px 0;
 }
+
+div.tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 2px;
+            font-size: 12pt;
+            font-family: "Century Gothic";
+            background-color: black;
+        }
+.link{
+	stroke-width: 2px;
+}
+
+.link:hover{
+	stroke-width: 5px;
+}
