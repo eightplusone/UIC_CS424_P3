@@ -20,9 +20,7 @@ $(document).ready(function(){
 			else{
 			var temp_holder= [];
 			var max_x = $(".stairViz").width() - 10;
-			console.log(max_x);
 			var max_y = $(".stairViz").height() -10;
-			console.log(max_y);
 			var paragraph= [];
 			var i=0;
 			var j=0;
@@ -120,17 +118,64 @@ $(document).ready(function(){
 					var label = d3.select(this).attr("label");
 					var src = d3.select(this).attr("src");
 					var dest = d3.select(this).attr("dest");
-					console.log(label);
-					div.html("Label: "+ label +"<br> Relationship: <br> " + src + "->" + dest)
+					div.html("Label: "+ label +"<br> Relationship: <br>" + getword(src,dest,label))
 							.style("left",d3.event.pageX +"px")
 								.style("top", d3.event.pageY - 28 +"px")
 								.style("color", "white");
 			}
 			
-			/*function getword(edg)
+			function getword(src,dest,label)
 			{
+				var relation=" ";
+				var stack = [];
+				stack.push(dest);
+				stack.push(label);
+				stack.push(src);
+							
+				do{
+					var pattern = /E[0-9]+/g;
+					var pattern2 = /T[0-9]+/g;
+					node = stack.pop();
+					if(node.includes("T") && pattern2.test(node)){
+						relation = relation +lookup(node);
+					}
+					else if(node.includes("E") && pattern.test(node)){
+						relation = relation + "(";
+						stack.push(")");
+						var temp_edge = lookupedge(node);			
+						stack.push(temp_edge.destinationid);
+						stack.push(temp_edge.label);
+						stack.push(temp_edge.sourceid);
+										
+					}
+					else if(node==")"){
+							relation = relation+ node;
+										
+					}
+					else{
+						relation = relation+ "->"+node+"->";
+					}
 				
-			}*/
+				}while(stack.length !=0);
+				return relation;	
+			}
+			
+			function lookup(id){
+				for(var i =0;i< temp_holder.length;i++){
+					if(id == temp_holder[i].Id){
+					return temp_holder[i].word;
+					}
+				}
+			}
+			
+			function lookupedge(id){
+				for(var i =0;i< edge.length;i++){
+					if(id == edge[i].Id){
+						return edge[i];
+					}
+				}
+			}
+			
 			function funcmouseout(d)
             {
                 div.transition()
