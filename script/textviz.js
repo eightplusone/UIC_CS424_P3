@@ -7,14 +7,19 @@ $(document).ready(function(){
       .attr("id", "svg_left");
 
   let word_position = {};
-  let word_distance = 10;
+  let margin = 10;
   let line_height = 50;
   let font_size = "12px";
   let line_width = 0;
   let line_counter = 1;
 
-  let container_width = 320;
+  let container_width = 360;
   let categories = 0;
+
+  // Arrow
+  let thickness = 2;
+  let arrow_w = 6;
+  let arrow_h = 4;
    
   // Load data
   d3.json("./data/abstracts.json", function(err0, abstracts) {
@@ -49,23 +54,23 @@ $(document).ready(function(){
           
           // If adding this word to the paragraph exceeds the container's 
           // width, move the word to the next line.
-          if (line_width + word_distance*2 + w_width < container_width) {
+          if (line_width + margin*2 + w_width < container_width) {
             doc.append("tspan")
-              .attr("dx", word_distance)
+              .attr("dx", margin)
               .text(w.word)
               .style("font-size", font_size)
               ;
 
             word_position[w.Id] = [
-              line_width + word_distance + Math.round( w_width/2 ), 
+              line_width + margin + Math.round( w_width/2 ), 
               line_counter * line_height
             ]
             
-            line_width = line_width + word_distance + w_width;
+            line_width = line_width + margin + w_width;
 
           } else {
             doc.append("tspan")
-              .attr("x", word_distance)
+              .attr("x", margin)
               .attr("dy", line_height)
               .text(w.word)
               .style("font-size", font_size)
@@ -74,11 +79,11 @@ $(document).ready(function(){
             line_counter += 1;
 
             word_position[w.Id] = [
-              word_distance + Math.round( w_width/2 ), 
-              line_counter * line_height
+              margin + Math.round( w_width/2 ), 
+              (2*line_counter+1) * line_height/2
             ]
             
-            line_width = word_distance + w_width;
+            line_width = margin + w_width;
           }
           
           temp_tspan.remove();
@@ -87,7 +92,7 @@ $(document).ready(function(){
 
       // Add an extra blank line to separate two paragraphs.
       doc.append("tspan")
-        .attr("x", word_distance)
+        .attr("x", margin)
         .attr("dy", line_height)
         .text(" ")
         .style("font-size", font_size)
@@ -96,18 +101,75 @@ $(document).ready(function(){
     
     // Draw the edges
     edges.forEach(function(edge, edge_idx) {
-      if (edge.destinationid.indexOf("T") > -1) {
-        console.log(word_position[ edge.sourceid ][0], word_position[ edge.sourceid ][1]);
-
-        let arrow = "M ";
-        arrow += word_position[ edge.sourceid ][0] + ", " + word_position[ edge.sourceid ][1];
+      let color = "#000000";
+      let arrow = "M ";
+      
+      if (edge.sourceid.indexOf("T") == 0 && edge.destinationid.indexOf("T") == 0) {
+        // Start at the right side of the source
+        arrow += (word_position[edge.sourceid][0] + thickness/2) + ", " + (word_position[edge.sourceid][1] - line_height/4);
+        // Up
         arrow += " L ";
-        arrow += word_position[ edge.destinationid ][0] + ", " + word_position[ edge.destinationid ][1];
+        arrow += (word_position[edge.sourceid][0] + thickness/2) + ", " + (word_position[edge.sourceid][1] - line_height/2 + thickness/2);
+        // Right
+        arrow += " L ";
+        arrow += (container_width - margin + thickness/2) + ", " + (word_position[edge.sourceid][1] - line_height/2 + thickness/2);
+        // Up
+        arrow += " L ";
+        arrow += (container_width - margin + thickness/2) + ", " + (word_position[edge.destinationid][1] - line_height/2 - thickness/2);
+        // Left
+        arrow += " L ";
+        arrow += (word_position[edge.destinationid][0] - thickness/2) + ", " + (word_position[edge.destinationid][1] - line_height/2 - thickness/2);
+        // Down
+        arrow += " L ";
+        arrow += (word_position[edge.destinationid][0] - thickness/2) + ", " + (word_position[edge.destinationid][1] - line_height/4 - thickness/2);
+        // Left
+        arrow += " L ";
+        arrow += (word_position[edge.destinationid][0] - thickness/2 - arrow_w/2) + ", " + (word_position[edge.destinationid][1] - line_height/4 - thickness/2);
+        // Arrow head
+        arrow += " L ";
+        arrow += (word_position[edge.destinationid][0]) + ", " + (word_position[edge.destinationid][1] - line_height/4 + arrow_h);
+        // Up right
+        arrow += " L ";
+        arrow += (word_position[edge.destinationid][0] + thickness/2 + arrow_w/2) + ", " + (word_position[edge.destinationid][1] - line_height/4 - thickness/2);
+        // Left
+        arrow += " L ";
+        arrow += (word_position[edge.destinationid][0] + thickness/2) + ", " + (word_position[edge.destinationid][1] - line_height/4 + thickness/2);
+        // Up
+        arrow += " L ";
+        arrow += (word_position[edge.destinationid][0] + thickness/2) + ", " + (word_position[edge.destinationid][1] - line_height/2 + thickness/2);
+        // Right
+        arrow += " L ";
+        arrow += (container_width - margin - thickness/2) + ", " + (word_position[edge.destinationid][1] - line_height/2 + thickness/2);
+        // Down
+        arrow += " L ";
+        arrow += (container_width - margin - thickness/2) + ", " + (word_position[edge.sourceid][1] - line_height/2 - thickness/2);
+        // Left
+        arrow += " L ";
+        arrow += (word_position[edge.sourceid][0] - thickness/2) + ", " + (word_position[edge.sourceid][1] - line_height/2 - thickness/2);
+        // Down
+        arrow += " L ";
+        arrow += (word_position[edge.sourceid][0] - thickness/2) + ", " + (word_position[edge.sourceid][1] - line_height/4);
 
-        svg_left.append("path")
-          .attr("d", arrow)
-          .style("fill", "#000000");
+        color = "#0098ce";
       }
+      svg_left.append("path")
+          .attr("d", arrow)
+          .style("fill", color);
     })
   }
 });
+
+/*
+ * Take in lists of words and edges. The list of word consists 
+ * Returns position of each edge, including starting position, ending 
+ * position, and the edge's height and width.
+ */
+function edgeOrganizer(svg, word_position, edge_list, isSided) {
+  if (isSided) {
+
+  } else {
+
+  }
+}
+
+
