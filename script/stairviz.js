@@ -259,4 +259,38 @@ $(document).ready(function(){
 	}
 })	
 
+	//function of the annotation dropdown
+	var json = (function() {
+		var json = null;
+		$.ajax({
+			'async': false,
+			'global': false,
+			'url': "data/edge.json",
+			'dataType': "json",
+			'success': function (data) {
+				json = data;
+			}
+		});
+		return json;
+	})();
+
+	var tr;
+	var input = [];
+	for (var i = 0; i < json.length; i++) {
+		input.push(json[i].label);
+	}
+	var uniqueNames = [];
+	$.each(input, function(i, el){
+		if($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
+	});
+
+	var select = document.getElementById("selectNumber");
+	for(var i = 0; i < uniqueNames.length; i++) {
+		var opt = uniqueNames[i];
+		var el = document.createElement("option");
+		el.textContent = opt;
+		el.value = opt;
+		select.appendChild(el);
+	}	
+
 });
