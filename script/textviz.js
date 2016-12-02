@@ -102,9 +102,10 @@ $(document).ready(function(){
     // Draw the edges
     edges.forEach(function(edge, edge_idx) {
       let color = "#000000";
-      let arrow = "M ";
+      let arrow = "";
       
       if (edge.sourceid.indexOf("T") == 0 && edge.destinationid.indexOf("T") == 0) {
+        arrow += "M ";
         // Start at the right side of the source
         arrow += (word_position[edge.sourceid][0] + thickness/2) + ", " + (word_position[edge.sourceid][1] - line_height/4);
         // Up
@@ -154,6 +155,7 @@ $(document).ready(function(){
       }
       svg_left.append("path")
           .attr("d", arrow)
+          .attr("class", "blue");
           .style("fill", color);
     })
   }
