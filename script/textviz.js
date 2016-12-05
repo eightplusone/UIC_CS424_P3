@@ -6,172 +6,326 @@ $(document).ready(function(){
       .attr("height", "600%")
       .attr("id", "svg_left");
 
-  let word_position = {};
-  let margin = 10;
-  let line_height = 50;
-  let font_size = "12px";
-  let line_width = 0;
-  let line_counter = 1;
-
   let container_width = 360;
-  let categories = 0;
+  let margin = 10;
+  let line_h = 50;
+  let font_size = "15px";
+  let line_width = 0;  // Total width of each line of text
+  let line_counter = 1;  // 
+
+  // Selected categories
+  let categories = {};
+
+  // Position of words and edges (in pixel)
+  let w_pos = {};
+  let e_pos = [];
 
   // Arrow
   let thickness = 2;
-  let arrow_w = 6;
+  let edge_distance = 10;
+  let arrow_w = 2;
   let arrow_h = 4;
+  let color_n2n = "#0098ce";
+  let color_n2e = "#3ad531";
+  let color_e2n = "#ff7376";
+  let color_e2e = "#8a6ad4";
+  let num_edges_on_line = [];
    
   // Load data
-  d3.json("./data/abstracts.json", function(err0, abstracts) {
-    if (err0) throw err0;
-    d3.json("./data/labelleddata.json", function(err1, labels) {
-      if (err1) throw err1;
-      d3.json("./data/edge1.json", function(err2, edges){
-        if(err2) throw err2;
-        display_textviz(abstracts.content, labels, edges, categories);
-      })
+  d3.json("./data/labelleddata.json", function(err1, labels) {
+    if (err1) throw err1;
+    d3.json("./data/edge.json", function(err2, edges){
+      if(err2) throw err2;
+      textviz(labels, edges, categories);
     })
   })
 
   // Display TextViz
-  function display_textviz(content, labels, edges, categories) {
+  function textviz(labels, edges, categories) {
     // Container
     let doc = svg_left.append("text")
         .attr("x", 0)
-        .attr("y", line_height)
+        .attr("y", line_h)
         ;
-
-    // Display the text
-    labels.forEach(function(paragraph, paragraph_idx) {
-      paragraph.forEach(function(sentence, sentence_idx) {
-        sentence.forEach(function(w, word_idx) {
-          // Append this word a tspan and measure its width.
-          let temp_tspan = svg_left.append("text")
-              .text(w.word)
-              .style("font-size", font_size)
-              ;
-          let w_width = Math.round( temp_tspan.node().getComputedTextLength() );
-          
-          // If adding this word to the paragraph exceeds the container's 
-          // width, move the word to the next line.
-          if (line_width + margin*2 + w_width < container_width) {
-            doc.append("tspan")
-              .attr("dx", margin)
-              .text(w.word)
-              .style("font-size", font_size)
-              ;
-
-            word_position[w.Id] = [
-              line_width + margin + Math.round( w_width/2 ), 
-              line_counter * line_height
-            ]
-            
-            line_width = line_width + margin + w_width;
-
-          } else {
-            doc.append("tspan")
-              .attr("x", margin)
-              .attr("dy", line_height)
-              .text(w.word)
-              .style("font-size", font_size)
-              ;
-
-            line_counter += 1;
-
-            word_position[w.Id] = [
-              margin + Math.round( w_width/2 ), 
-              (2*line_counter+1) * line_height/2
-            ]
-            
-            line_width = margin + w_width;
-          }
-          
-          temp_tspan.remove();
-        })
-      })
-
-      // Add an extra blank line to separate two paragraphs.
-      doc.append("tspan")
-        .attr("x", margin)
-        .attr("dy", line_height)
-        .text(" ")
-        .style("font-size", font_size)
-        ;
-    })
     
-    // Draw the edges
-    edges.forEach(function(edge, edge_idx) {
-      let color = "#000000";
-      let arrow = "";
-      
-      if (edge.sourceid.indexOf("T") == 0 && edge.destinationid.indexOf("T") == 0) {
-        arrow += "M ";
-        // Start at the right side of the source
-        arrow += (word_position[edge.sourceid][0] + thickness/2) + ", " + (word_position[edge.sourceid][1] - line_height/4);
-        // Up
-        arrow += " L ";
-        arrow += (word_position[edge.sourceid][0] + thickness/2) + ", " + (word_position[edge.sourceid][1] - line_height/2 + thickness/2);
-        // Right
-        arrow += " L ";
-        arrow += (container_width - margin + thickness/2) + ", " + (word_position[edge.sourceid][1] - line_height/2 + thickness/2);
-        // Up
-        arrow += " L ";
-        arrow += (container_width - margin + thickness/2) + ", " + (word_position[edge.destinationid][1] - line_height/2 - thickness/2);
-        // Left
-        arrow += " L ";
-        arrow += (word_position[edge.destinationid][0] - thickness/2) + ", " + (word_position[edge.destinationid][1] - line_height/2 - thickness/2);
-        // Down
-        arrow += " L ";
-        arrow += (word_position[edge.destinationid][0] - thickness/2) + ", " + (word_position[edge.destinationid][1] - line_height/4 - thickness/2);
-        // Left
-        arrow += " L ";
-        arrow += (word_position[edge.destinationid][0] - thickness/2 - arrow_w/2) + ", " + (word_position[edge.destinationid][1] - line_height/4 - thickness/2);
-        // Arrow head
-        arrow += " L ";
-        arrow += (word_position[edge.destinationid][0]) + ", " + (word_position[edge.destinationid][1] - line_height/4 + arrow_h);
-        // Up right
-        arrow += " L ";
-        arrow += (word_position[edge.destinationid][0] + thickness/2 + arrow_w/2) + ", " + (word_position[edge.destinationid][1] - line_height/4 - thickness/2);
-        // Left
-        arrow += " L ";
-        arrow += (word_position[edge.destinationid][0] + thickness/2) + ", " + (word_position[edge.destinationid][1] - line_height/4 + thickness/2);
-        // Up
-        arrow += " L ";
-        arrow += (word_position[edge.destinationid][0] + thickness/2) + ", " + (word_position[edge.destinationid][1] - line_height/2 + thickness/2);
-        // Right
-        arrow += " L ";
-        arrow += (container_width - margin - thickness/2) + ", " + (word_position[edge.destinationid][1] - line_height/2 + thickness/2);
-        // Down
-        arrow += " L ";
-        arrow += (container_width - margin - thickness/2) + ", " + (word_position[edge.sourceid][1] - line_height/2 - thickness/2);
-        // Left
-        arrow += " L ";
-        arrow += (word_position[edge.sourceid][0] - thickness/2) + ", " + (word_position[edge.sourceid][1] - line_height/2 - thickness/2);
-        // Down
-        arrow += " L ";
-        arrow += (word_position[edge.sourceid][0] - thickness/2) + ", " + (word_position[edge.sourceid][1] - line_height/4);
+    // Calculate position of each word and display the words
+    init_text();
 
-        color = "#0098ce";
+    // Initialize edge counter for each line
+    for (i = 0; i < line_counter; i++) { num_edges_on_line[i] = 0; }
+
+    // Calculate position of the edges
+    for (edge_idx = 1; edge_idx <= edges.length; edge_idx++) {
+      let color = "#000000";
+      let e = edges[edge_idx-1];
+      let s = e.sourceid;
+      let d = e.destinationid;
+      e_pos[edge_idx-1] = [];
+
+      // n2n
+      if (s.indexOf("T") == 0 && d.indexOf("T") == 0) {
+        color = color_n2n;
+
+        if ( w_pos[s][1] == w_pos[d][1] ) {  // Words on the same line
+          let line = "M ";
+          // Source
+          line += (w_pos[s][0] - Math.round(w_pos[s][2]/4)) 
+                + " " 
+                + (w_pos[s][1] - Math.round(line_h/4));
+          // Up
+          line += " L " 
+                  + (w_pos[s][0] - Math.round(w_pos[s][2]/4)) 
+                  + " " 
+                  + (w_pos[s][1] - Math.round(line_h/2));
+          // Turn
+          line += " L " 
+                  + (w_pos[d][0] + Math.round(w_pos[d][2]/6)) 
+                  + " " 
+                  + (w_pos[s][1] - Math.round(line_h/2));
+          // Destination
+          line += " L " 
+                  + (w_pos[d][0] + Math.round(w_pos[d][2]/6)) 
+                  + " " 
+                  + (w_pos[s][1] - Math.round(line_h/4));
+          // Add to list
+          e_pos[edge_idx-1].push({line, color});
+          num_edges_on_line[ Math.round( w_pos[s][1]/line_h ) - 1 ] ++;
+
+          // Arrowhead
+          line = "M " 
+                  + (w_pos[d][0] + Math.round(w_pos[d][2]/6) - arrow_w) 
+                  + " " 
+                  + (w_pos[d][1] - Math.round(line_h/4));
+          line += " L " 
+                  + (w_pos[d][0] + Math.round(w_pos[d][2]/6)) 
+                  + " " 
+                  + (w_pos[d][1] - Math.round(line_h/4) + arrow_h);
+          line += " L " 
+                  + (w_pos[d][0] + Math.round(w_pos[d][2]/6) + arrow_w) 
+                  + " " 
+                  + (w_pos[d][1] - Math.round(line_h/4));
+          // Add to list
+          e_pos[edge_idx-1].push({line, color});
+      
+
+
+        } else {  // The two words are not on the same line
+          // Source
+          let line = "M " 
+                  + (w_pos[s][0] - Math.round(w_pos[s][2]/4)) 
+                  + " " 
+                  + (w_pos[s][1] - Math.round(line_h/4));
+          // Up
+          line += " L " 
+                  + (w_pos[s][0] - Math.round(w_pos[s][2]/4)) 
+                  + " " 
+                  + (w_pos[s][1] - Math.round(line_h/2));
+          
+
+          if (parseInt(s.substring(1)) < parseInt(d.substring(1))) {  // Go down/right
+            let curr_h = w_pos[s][1] - Math.round(line_h/2);
+
+            // Span over multiple lines.
+            // Instead of drawing segments, we go "out of the box" to have
+            // one continous line.
+            while (curr_h < w_pos[d][1]) {
+              // Right
+              line += " L " + (container_width + 100) + " " + curr_h;
+              // Up
+              line += " L " + (container_width + 100) + " " + (-100);
+              // Left
+              line += " L -100 -100";
+              // Increase height
+              curr_h += line_h;
+              // Down
+              line += " L -100 " + curr_h;
+              // Update number of edges on that line
+              num_edges_on_line[ Math.round( curr_h/line_h ) - 1 ] ++;
+            }
+
+            // Destination
+            line += " L " 
+                    + w_pos[d][0] 
+                    + " " 
+                    + w_pos[d][1];
+            e_pos[edge_idx-1].push({line, color});
+
+            // Arrowheads
+            curr_h = w_pos[s][1] - Math.round(line_h/2);
+            while (curr_h < w_pos[d][1]) {
+              line = "M " + (container_width - arrow_h) + " " + (curr_h - arrow_w);
+              line += " L " + container_width + " " + curr_h;
+              line += " L " + (container_width - arrow_h) + " " + (curr_h + arrow_w);
+              curr_h += line_h;
+              // Add to list
+              e_pos[edge_idx-1].push({ line, color });
+            }
+
+
+          } else {  // Go up/left
+            let curr_h = (w_pos[s][1] - Math.round(line_h/2));
+
+            // Span over multiple lines.
+            // Instead of drawing segments, we go "out of the box" to have
+            // one continous line.
+            while (curr_h > w_pos[d][1]) {
+              // Left
+              line += " L " + (-100) + " " + curr_h;
+              // Up
+              line += " L -100 -100";
+              // Right
+              line += " L " + (container_width + 100) + " " + (-100);
+              // Increase height
+              curr_h -= line_h;
+              // Down
+              line += " L " + (container_width + 100) + " " + curr_h;
+              // Update number of edges on that line
+              num_edges_on_line[ Math.round( curr_h/line_h ) - 1 ] ++;
+            }
+
+            // Destination
+            line += " L " 
+                  + (w_pos[d][0] + Math.round(w_pos[d][2]/6)) 
+                  + " " 
+                  + (w_pos[d][1] - Math.round(line_h/2));
+            line += " L " 
+                  + (w_pos[d][0] + Math.round(w_pos[d][2]/6)) 
+                  + " " 
+                  + (w_pos[d][1] - Math.round(line_h/4));
+            // Add to list
+            e_pos[edge_idx-1].push({line, color});
+
+            // Arrowheads
+            curr_h = (w_pos[s][1] - Math.round(line_h/2));
+            while (curr_h > w_pos[d][1]) {
+              line = "M " + arrow_h + " " + (curr_h - arrow_w);
+              line += " L 0 " + curr_h;
+              line += " L " + arrow_h + " " + (curr_h + arrow_w);
+              curr_h -= line_h;
+              // Add to list
+              e_pos[edge_idx-1].push({ line, color });
+            }
+          }
+
+          // Arrowhead
+          line = "M " 
+                  + (w_pos[d][0] + Math.round(w_pos[d][2]/6) - arrow_w) 
+                  + " " 
+                  + (w_pos[d][1] - Math.round(line_h/4));
+          line += " L " 
+                  + (w_pos[d][0] + Math.round(w_pos[d][2]/6)) 
+                  + " " 
+                  + (w_pos[d][1] - Math.round(line_h/4) + arrow_h);
+          line += " L " 
+                  + (w_pos[d][0] + Math.round(w_pos[d][2]/6) + arrow_w) 
+                  + " " 
+                  + (w_pos[d][1] - Math.round(line_h/4));
+          // Add to list
+          e_pos[edge_idx-1].push({line, color});
+        }
       }
-      svg_left.append("path")
-          .attr("d", arrow)
-          .attr("class", "blue");
-          .style("fill", color);
-    })
+    }
+
+    // Get the maximum number of edges on the lines.
+    // The positions (of words and edges) will be updated so no edge will
+    // overlap the texts.
+    let max_num_edges = Math.max.apply(null, num_edges_on_line);
+
+    // Stretch the space (Re-calculate the position of each word and each edge)
+    updateWordDistance(max_num_edges);
+
+    // Clear the SVG
+    d3.select("svg_left > *").remove();
+
+    // Display text again
+
+    // Draw the edges
+    e_pos.forEach(function(_edge_, _i_) {
+      _edge_.forEach(function(_e_, __i__) {
+        svg_left.append("path")
+          .attr("d", _e_["line"])
+          .attr("stroke-width", thickness)
+          .attr("stroke", _e_["color"])
+          .style("fill", "transparent");
+      });
+    });    
+
+    // Calculate the initial position of each word
+    function init_text() {
+      labels.forEach(function(paragraph, paragraph_idx) {
+        paragraph.forEach(function(sentence, sentence_idx) {
+          sentence.forEach(function(w, word_idx) {
+            // Append this word a tspan and measure its width.
+            let temp_tspan = svg_left.append("text")
+                .text(w.word)
+                .style("font-size", font_size)
+                ;
+            let w_width = Math.round( temp_tspan.node().getComputedTextLength() );
+            
+            // If adding this word to the paragraph exceeds the container's 
+            // width, move the word to the next line.
+            if (line_width + margin*2 + w_width < container_width) {
+              // Put the word into textviz
+              doc.append("tspan")
+                .attr("dx", margin)
+                .text(w.word)
+                .style("font-size", font_size)
+                ;
+              // Log its coordinates
+              w_pos[w.Id] = [
+                line_width + margin + Math.round( w_width/2 ), 
+                line_counter * line_h,
+                w_width
+              ]
+              // Update line_width
+              line_width = line_width + margin + w_width;
+
+            } else {
+              // New line
+              line_counter += 1;
+              // Put the word into textviz
+              doc.append("tspan")
+                .attr("x", margin)
+                .attr("dy", line_h)
+                .text(w.word)
+                .style("font-size", font_size)
+                ;
+              // Log its coordinates
+              w_pos[w.Id] = [
+                margin + Math.round( w_width/2 ), 
+                line_counter * line_h,
+                w_width
+              ]
+              // Update line_width
+              line_width = margin + w_width;
+            }
+
+            temp_tspan.remove();
+          })
+        })
+
+        // Add an extra blank line to separate two paragraphs.
+        doc.append("tspan")
+          .attr("x", margin)
+          .attr("dy", line_h)
+          .text(" ")
+          .style("font-size", font_size)
+          ;
+      })
+    }
+
+    // Stretch the gap between lines more to fit in more arrows
+    function updateWordDistance(num_edges) {
+      for (let key in w_pos) {
+        w_pos[key][1] += (max_num_edges * edge_distance - line_h);
+      };
+    }
+
+    // Display text after stretching
+    function display_text() {
+
+    }
   }
 });
-
-/*
- * Take in lists of words and edges. The list of word consists 
- * Returns position of each edge, including starting position, ending 
- * position, and the edge's height and width.
- */
-function edgeOrganizer(svg, word_position, edge_list, isSided) {
-  if (isSided) {
-
-  } else {
-
-  }
-}
 
 
