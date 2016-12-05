@@ -8,10 +8,10 @@ $(document).ready(function(){
 
   let container_width = 360;
   let margin = 10;
-  let line_h = 50;
-  let font_size = "15px";
+  let line_h = 50;  // Initial line height
+  let font_size = "14px";
   let line_width = 0;  // Total width of each line of text
-  let line_counter = 1;  // 
+  let line_counter = 1;  // Length of the paragraph (in lines)
 
   // Selected categories
   let categories = {};
@@ -22,13 +22,13 @@ $(document).ready(function(){
 
   // Arrow
   let thickness = 2;
-  let edge_distance = 10;
   let arrow_w = 2;
   let arrow_h = 4;
   let color_n2n = "#0098ce";
   let color_n2e = "#3ad531";
   let color_e2n = "#ff7376";
   let color_e2e = "#8a6ad4";
+  let edge_distance = 10;  // Distance (in y-value) between two edges on the same line
   let num_edges_on_line = [];
    
   // Load data
